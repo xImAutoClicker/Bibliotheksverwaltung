@@ -1,4 +1,4 @@
-package de.fhdw.project.library.media.model;
+package de.fhdw.project.library.media.model.suggestion;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -26,6 +26,17 @@ public class SuggestionModel {
     private long createdAt;
 
     private SuggestionStatusType statusType = SuggestionStatusType.OPEN;
+
+    public final SuggestionResponseModel toResponse(){
+        return SuggestionResponseModel.builder()
+                .uuid(this.uuid)
+                .nameOfBook(this.nameOfBook)
+                .isbn(this.isbn)
+                .userId(this.userId)
+                .createdAt(this.createdAt)
+                .suggestionStatusType(this.statusType)
+                .build();
+    }
 
     public enum SuggestionStatusType {
         OPEN,

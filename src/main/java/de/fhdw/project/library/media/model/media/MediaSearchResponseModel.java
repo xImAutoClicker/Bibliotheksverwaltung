@@ -1,5 +1,6 @@
-package de.fhdw.project.library.media.model;
+package de.fhdw.project.library.media.model.media;
 
+import de.fhdw.project.library.media.model.media.MediaResponseModel;
 import de.fhdw.project.library.util.response.AbstractResponse;
 import lombok.Builder;
 

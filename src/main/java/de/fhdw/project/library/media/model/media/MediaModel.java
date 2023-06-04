@@ -1,4 +1,4 @@
-package de.fhdw.project.library.media.model;
+package de.fhdw.project.library.media.model.media;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
