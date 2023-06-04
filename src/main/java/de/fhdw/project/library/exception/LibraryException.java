@@ -1,8 +1,10 @@
 package de.fhdw.project.library.exception;
 
 import de.fhdw.project.library.util.response.ErrorType;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
+@Getter
 public class LibraryException extends Exception{
 
     private final ErrorType errorType;

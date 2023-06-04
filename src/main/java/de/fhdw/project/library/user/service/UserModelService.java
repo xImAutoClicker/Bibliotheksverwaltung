@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,6 +88,7 @@ public class UserModelService {
                 .street(street)
                 .streetNumber(streetNumber)
                 .zipCode(zipCode)
+                .createdAt(Instant.now().toEpochMilli())
                 .build()
                 .generateSessionToken();
 

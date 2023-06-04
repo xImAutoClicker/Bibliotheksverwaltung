@@ -80,6 +80,7 @@ public class UserModel {
                 .uuid(this.uuid)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
+                .createdAt(isAllowed ? this.createdAt : null)
                 .email(isAllowed ? this.email : null)
                 .city(isAllowed ? this.city : null)
                 .street(isAllowed ? this.street : null)

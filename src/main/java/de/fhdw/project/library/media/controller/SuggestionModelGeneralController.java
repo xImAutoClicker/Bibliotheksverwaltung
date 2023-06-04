@@ -1,8 +1,7 @@
 package de.fhdw.project.library.media.controller;
 
 import de.fhdw.project.library.exception.LibraryException;
-import de.fhdw.project.library.media.service.request.MediaModelRequestService;
-import de.fhdw.project.library.media.service.request.ReservationModelRequestService;
+import de.fhdw.project.library.media.service.request.SuggestionModelRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,25 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/media")
+@RequestMapping("api/v1/suggestion")
 @CrossOrigin
-public class ReservationModelGeneralController {
+public class SuggestionModelGeneralController {
 
     @Autowired
-    private ReservationModelRequestService reservationModelRequestService;
-
-    /**
-     * Add - MediaId, UserId
-     * Update Status - ReservationId - StatusCode (nach enum liste 0 = OPEN | 1 = ACCEPTED)
-     * GetReservation
-     * Delete MediaId, UserId
-     */
+    private SuggestionModelRequestService suggestionModelRequestService;
 
 
     @PostMapping("")
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
-            return this.reservationModelRequestService.createReservation(auth, body);
+            return this.suggestionModelRequestService.createSuggestion(auth, body);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
@@ -37,7 +29,7 @@ public class ReservationModelGeneralController {
     @PutMapping("/{uuid}")
     public final ResponseEntity<String> onUpdate(@RequestHeader final String auth, @PathVariable final UUID uuid, @RequestBody final String body){
         try{
-            return this.reservationModelRequestService.updateReservation(auth, uuid, body);
+            return this.suggestionModelRequestService.updateSuggestion(auth, uuid, body);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
@@ -46,16 +38,16 @@ public class ReservationModelGeneralController {
     @GetMapping("/{uuid}")
     public final ResponseEntity<String> onGet(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.reservationModelRequestService.getReservation(auth, uuid);
+            return this.suggestionModelRequestService.getSuggestion(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
     @GetMapping("/user/{uuid}")
-    public final ResponseEntity<String> onGetReservationOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
+    public final ResponseEntity<String> onGetSuggestionOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.reservationModelRequestService.getReservationsOfUser(auth, uuid);
+            return this.suggestionModelRequestService.getSuggestionUser(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
@@ -64,7 +56,7 @@ public class ReservationModelGeneralController {
     @GetMapping("")
     public final ResponseEntity<String> onGet(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
         try{
-            return this.reservationModelRequestService.getReservations(auth, page, size);
+            return this.suggestionModelRequestService.getSuggestions(auth, page, size);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }

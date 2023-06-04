@@ -44,7 +44,7 @@ public class BorrowModel {
     public final BorrowResponseModel toResponse(MediaModelService mediaModelService) {
         return BorrowResponseModel.builder()
                 .uuid(this.uuid)
-                .media(mediaModelService.getMediaModelByUUIDWithOutError(this.mediaId).toResponse())
+                .media(mediaModelService.getMediaModelByUUIDWithOutError(this.mediaId).toResponse(mediaModelService.getMediaHeadModelService()))
                 .borrowStatusType(borrowStatusType)
                 .borrowStart(this.borrowStart)
                 .borrowEnd(this.borrowEnd)

@@ -2,6 +2,7 @@ package de.fhdw.project.library.media.controller;
 
 import de.fhdw.project.library.exception.LibraryException;
 import de.fhdw.project.library.media.service.request.MediaModelRequestService;
+import de.fhdw.project.library.media.service.request.ReservationModelRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,57 +10,64 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/media")
+@RequestMapping("api/v1/reservation")
 @CrossOrigin
-public class MediaModelGeneralController {
+public class ReservationModelGeneralController {
 
     @Autowired
-    private MediaModelRequestService mediaModelRequestService;
+    private ReservationModelRequestService reservationModelRequestService;
 
-    @GetMapping("/{uuid}")
-    public final ResponseEntity<String> onGet(@RequestHeader final String auth, @PathVariable final UUID uuid){
-        try{
-            return this.mediaModelRequestService.getMedia(auth, uuid);
-        }catch (LibraryException e){
-            return e.toResponseEntity();
-        }
-    }
+    /**
+     * Add - MediaId, UserId
+     * Update Status - ReservationId - StatusCode (nach enum liste 0 = OPEN | 1 = ACCEPTED)
+     * GetReservation
+     * Delete MediaId, UserId
+     */
 
-    @GetMapping("/search")
-    public final ResponseEntity<String> onSearch(@RequestHeader final String auth, @RequestParam(required = false) final String filter, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
-        try{
-            return this.mediaModelRequestService.searchMedia(auth, filter, page, size);
-        }catch (LibraryException e){
-            return e.toResponseEntity();
-        }
-    }
 
     @PostMapping("")
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
-            return this.mediaModelRequestService.createMedia(auth, body);
+            return this.reservationModelRequestService.createReservation(auth, body);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
     @PutMapping("/{uuid}")
-    public final ResponseEntity<String> onEdit(@RequestHeader final String auth, @PathVariable final UUID uuid, @RequestBody final String body){
+    public final ResponseEntity<String> onUpdate(@RequestHeader final String auth, @PathVariable final UUID uuid, @RequestBody final String body){
         try{
-            return this.mediaModelRequestService.editMedia(auth, uuid, body);
+            return this.reservationModelRequestService.updateReservation(auth, uuid, body);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
-    @DeleteMapping("/{uuid}")
-    public final ResponseEntity<String> onEdit(@RequestHeader final String auth, @PathVariable final UUID uuid){
+    @GetMapping("/{uuid}")
+    public final ResponseEntity<String> onGet(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.mediaModelRequestService.deleteMedia(auth, uuid);
+            return this.reservationModelRequestService.getReservation(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
+    @GetMapping("/user/{uuid}")
+    public final ResponseEntity<String> onGetReservationOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
+        try{
+            return this.reservationModelRequestService.getReservationsOfUser(auth, uuid);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
+
+    @GetMapping("")
+    public final ResponseEntity<String> onGet(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
+        try{
+            return this.reservationModelRequestService.getReservations(auth, page, size);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
 
 }

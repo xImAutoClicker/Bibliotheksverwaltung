@@ -19,7 +19,11 @@ public enum ErrorType {
     EMAIL_IS_NOT_IN_THE_RIGHT_FORMAT(506, "The Email is not in the right format", HttpStatus.BAD_REQUEST),
     USERNAME_LENGTH_INVALID(507, "The username length is invalid", HttpStatus.BAD_REQUEST),
     DOES_NOT_HAVE_PERMISSION(536, "Doesn't have permission for the function", HttpStatus.UNAUTHORIZED),
-    MEDIA_NOT_FOUND(537, "Media not found", HttpStatus.BAD_REQUEST);
+    MEDIA_NOT_FOUND(537, "Media not found", HttpStatus.BAD_REQUEST),
+    IMAGE_IS_NOT_IN_THE_RIGHT_FORMAT(538, "The image is not in the right format", HttpStatus.BAD_REQUEST),
+    IMAGE_IS_TOO_LARGE(539, "The image is too large", HttpStatus.BAD_REQUEST),
+    RESERVATION_NOT_FOUND(540, "Reservation not found", HttpStatus.BAD_REQUEST),
+    MEDIA_HEAD_NOT_FOUND(541, "Media-Head not found", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String status;

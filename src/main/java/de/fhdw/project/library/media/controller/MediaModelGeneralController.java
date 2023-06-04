@@ -43,15 +43,6 @@ public class MediaModelGeneralController {
         }
     }
 
-    @PutMapping("")
-    public final ResponseEntity<String> onEdit(@RequestHeader final String auth, @RequestBody final String body){
-        try{
-            return this.mediaModelRequestService.editMedia(auth, body);
-        }catch (LibraryException e){
-            return e.toResponseEntity();
-        }
-    }
-
     @DeleteMapping("/{uuid}")
     public final ResponseEntity<String> onEdit(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{

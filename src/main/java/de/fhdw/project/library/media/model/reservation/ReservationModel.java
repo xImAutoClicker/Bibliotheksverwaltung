@@ -1,5 +1,6 @@
 package de.fhdw.project.library.media.model.reservation;
 
+import de.fhdw.project.library.media.service.MediaHeadModelService;
 import de.fhdw.project.library.media.service.MediaModelService;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -26,12 +27,11 @@ public class ReservationModel {
 
     private ReservationStatusType statusType = ReservationStatusType.OPEN;
 
-
     public final ReservationResponseModel toResponse(final MediaModelService mediaModelService) {
         return ReservationResponseModel.builder()
                 .uuid(this.uuid)
                 .createdAt(this.createdAt)
-                .media(mediaModelService.getMediaModelByUUIDWithOutError(this.mediaId).toResponse())
+                .media(mediaModelService.getMediaModelByUUIDWithOutError(this.mediaId).toResponse(mediaModelService.getMediaHeadModelService()))
                 .userId(this.userId)
                 .reservationStatusType(this.statusType)
                 .build();

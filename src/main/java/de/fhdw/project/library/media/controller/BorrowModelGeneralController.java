@@ -1,6 +1,7 @@
 package de.fhdw.project.library.media.controller;
 
 import de.fhdw.project.library.exception.LibraryException;
+import de.fhdw.project.library.media.service.request.BorrowModelRequestService;
 import de.fhdw.project.library.media.service.request.SuggestionModelRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,27 +10,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/suggestion")
+@RequestMapping("api/v1/borrow")
 @CrossOrigin
-public class SuggestionModelGeneralController {
+public class BorrowModelGeneralController {
 
     @Autowired
-    private SuggestionModelRequestService suggestionModelRequestService;
+    private BorrowModelRequestService borrowModelRequestService;
 
 
     @PostMapping("")
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
-            return this.suggestionModelRequestService.createSuggestion(auth, body);
+            return this.borrowModelRequestService.createBorrow(auth, body);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
     @PutMapping("/{uuid}")
-    public final ResponseEntity<String> onUpdate(@RequestHeader final String auth, @PathVariable final UUID uuid, @RequestBody final String body){
+    public final ResponseEntity<String> onReturn(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.suggestionModelRequestService.updateSuggestion(auth, uuid, body);
+            return this.borrowModelRequestService.returnMedia(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
@@ -38,16 +39,16 @@ public class SuggestionModelGeneralController {
     @GetMapping("/{uuid}")
     public final ResponseEntity<String> onGet(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.suggestionModelRequestService.getSuggestion(auth, uuid);
+            return this.borrowModelRequestService.getBorrow(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
 
     @GetMapping("/user/{uuid}")
-    public final ResponseEntity<String> onGetSuggestionOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
+    public final ResponseEntity<String> onGetBorrowsOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
-            return this.suggestionModelRequestService.getSuggestionUser(auth, uuid);
+            return this.borrowModelRequestService.getBorrowOfUser(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
@@ -56,7 +57,7 @@ public class SuggestionModelGeneralController {
     @GetMapping("")
     public final ResponseEntity<String> onGet(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
         try{
-            return this.suggestionModelRequestService.getSuggestions(auth, page, size);
+            return this.borrowModelRequestService.getBorrows(auth, page, size);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }
