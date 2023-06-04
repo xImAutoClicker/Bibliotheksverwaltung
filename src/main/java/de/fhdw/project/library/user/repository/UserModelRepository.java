@@ -10,9 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserModelRepository extends MongoRepository<UserModel, UUID> {
-    UserModel findByUsername(final String username);
     UserModel findByEmail(final String email);
     Page<UserModel> findUserEntriesByFirstNameStartingWithIgnoreCase(final String firstName, final Pageable pageable);
-    boolean existsByUsername(final String username);
     boolean existsByEmail(final String email);
 }
