@@ -16,5 +16,8 @@ public class UserModelResponse extends AbstractResponse {
     private String street;
     private String streetNumber;
     private String zipCode;
+    private String phoneNumber;
     private Long createdAt;
+    private boolean team;
+    private String cover;
 }

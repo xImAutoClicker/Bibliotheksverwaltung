@@ -10,6 +10,7 @@ import de.fhdw.project.library.media.service.MediaModelService;
 import de.fhdw.project.library.user.model.UserModel;
 import de.fhdw.project.library.user.service.UserModelService;
 import de.fhdw.project.library.util.response.ErrorType;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@Log4j2
 public class MediaModelRequestService {
 
     @Autowired
@@ -54,6 +56,9 @@ public class MediaModelRequestService {
 
         if(mediaRequestModel.getIsbn() == null)
             throw new LibraryException(ErrorType.BAD_REQUEST);
+
+        if(this.mediaHeadModelService.getMediaHeadModelByISBNWithOutError(mediaRequestModel.getIsbn()) == null)
+            throw new LibraryException(ErrorType.MEDIA_HEAD_NOT_FOUND);
 
         return this.mediaModelService.createModel(this.mediaHeadModelService.getMediaHeadModelByISBN(mediaRequestModel.getIsbn())).toResponse(this.mediaHeadModelService).toResponseEntity(HttpStatus.OK);
     }

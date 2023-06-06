@@ -12,6 +12,11 @@ public class ReservationResponseModel extends AbstractResponse {
     private UUID uuid;
     private MediaResponseModel media;
     private UUID userId;
-    private long createdAt;
-    private ReservationModel.ReservationStatusType reservationStatusType;
+    private Long createdAt;
+    private String reservationStatusType;
+    private Long estimatedDeliveryOn;
+
+    public ReservationModel.ReservationStatusType getReservationStatusType() {
+        return ReservationModel.ReservationStatusType.values()[Integer.parseInt(this.reservationStatusType)];
+    }
 }

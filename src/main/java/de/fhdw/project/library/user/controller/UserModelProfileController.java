@@ -18,7 +18,7 @@ public class UserModelProfileController {
 
     @GetMapping("/{uuid}")
     public final ResponseEntity<String> onGet(@RequestHeader final String auth, @PathVariable final UUID uuid){
-        try{
+        try {
             return this.userModelRequestService.getUser(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
@@ -34,4 +34,21 @@ public class UserModelProfileController {
         }
     }
 
+    @PutMapping("/edit/{uuid}")
+    public final ResponseEntity<String> onEdit(@RequestHeader final String auth, @PathVariable final UUID uuid, @RequestBody final String body){
+        try{
+            return this.userModelRequestService.editUser(auth, uuid, body);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
+
+    @DeleteMapping("/{uuid}")
+    public final ResponseEntity<String> onDelete(@RequestHeader final String auth, @PathVariable final UUID uuid){
+        try{
+            return this.userModelRequestService.deleteUser(auth, uuid);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
 }

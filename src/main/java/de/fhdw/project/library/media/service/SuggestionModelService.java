@@ -2,10 +2,12 @@ package de.fhdw.project.library.media.service;
 
 import com.google.common.collect.Lists;
 import de.fhdw.project.library.exception.LibraryException;
+import de.fhdw.project.library.media.model.media.head.MediaHeadResponseModel;
 import de.fhdw.project.library.media.model.suggestion.SuggestionModel;
 import de.fhdw.project.library.media.model.suggestion.SuggestionResponseModel;
 import de.fhdw.project.library.media.repository.SuggestionModelRepository;
 import de.fhdw.project.library.user.model.UserModel;
+import de.fhdw.project.library.util.LibraryUtil;
 import de.fhdw.project.library.util.response.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -46,13 +48,15 @@ public class SuggestionModelService {
      * Create - nameOfBook, isbn, userId;
      * Update - suggestionId, StatusCode (0 = OPEN, 1 = ACCPETED, 2 = DENIED)
      */
+    public final SuggestionModel createSuggestion(final UserModel userModel, final String nameOfBook, final String isbn, String cover) throws LibraryException {
+        final byte[] coverArr = LibraryUtil.checkAvatar(cover); //PERFORMANCE
 
-    public final SuggestionModel createSuggestion(final UserModel userModel, final String nameOfBook, final String isbn){
         final SuggestionModel suggestionModel = SuggestionModel.builder()
                 .uuid(this.getFreeSuggestionUUID())
                 .userId(userModel.getUuid())
                 .nameOfBook(nameOfBook)
                 .isbn(isbn)
+                .cover(coverArr)
                 .createdAt(Instant.now().toEpochMilli())
                 .statusType(SuggestionModel.SuggestionStatusType.OPEN)
                 .build();
@@ -83,5 +87,15 @@ public class SuggestionModelService {
         while(this.suggestionModelRepository.existsById(uuid))
             uuid = UUID.randomUUID();
         return uuid;
+    }
+
+    public final List<SuggestionResponseModel> searchSuggestion(final String filter, int page, final int size) {
+        page--;
+        final List<SuggestionResponseModel> toReturn = Lists.newArrayList();
+        if(filter == null || filter.isBlank() || filter.isEmpty())
+            this.suggestionModelRepository.findAllByOrderByStatusTypeDesc(PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse()));
+        else
+            this.suggestionModelRepository.findSuggestionModelsByNameOfBookStartingWithIgnoreCaseOrIsbnStartingWithIgnoreCaseAndStatusTypeOrderByStatusTypeDesc(filter, filter, filter, PageRequest.of(page, size), SuggestionModel.SuggestionStatusType.OPEN).getContent().forEach(entry -> toReturn.add(entry.toResponse()));
+        return toReturn;
     }
 }

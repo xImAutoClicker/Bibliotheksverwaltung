@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Getter
 public class MediaRequestModel {
     private String isbn;
-
     public static MediaRequestModel fromJson(String json){
         try{
             return LibraryApplication.getGson().fromJson(json, MediaRequestModel.class);

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Builder
 public class MediaResponseModel extends AbstractResponse {
-    private UUID uuid;
+    private UUID mediaId;
     private MediaHeadResponseModel mediaHead;
 }

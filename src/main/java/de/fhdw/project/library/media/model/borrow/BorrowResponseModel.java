@@ -9,11 +9,11 @@ import java.util.UUID;
 @Builder
 public class BorrowResponseModel extends AbstractResponse {
     private UUID uuid;
-    private MediaResponseModel media;
     private UUID userId;
-    private String isbn;
-    private BorrowModel.BorrowStatusType borrowStatusType;
-    private Long borrowStart;
-    private Long borrowEnd;
-    private Long returnedDate;
+    private int borrowStatusType;
+    private long borrowStart;
+    private long borrowEnd;
+    private long returnedDate;
+    private double penaltyFees;
+    private MediaResponseModel media;
 }

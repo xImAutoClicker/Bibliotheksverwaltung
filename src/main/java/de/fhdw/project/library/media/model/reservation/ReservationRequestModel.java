@@ -11,7 +11,11 @@ import java.util.UUID;
 public class ReservationRequestModel {
     private UUID mediaId;
     private UUID userId;
-    private ReservationModel.ReservationStatusType reservationStatusType;
+    private String reservationStatusType;
+
+    public final ReservationModel.ReservationStatusType getReservationStatusType() {
+        return ReservationModel.ReservationStatusType.values()[Integer.parseInt(reservationStatusType)];
+    }
 
     public static ReservationRequestModel fromJson(String json){
         try{

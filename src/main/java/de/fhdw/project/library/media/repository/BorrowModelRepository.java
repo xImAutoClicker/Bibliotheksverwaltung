@@ -7,5 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BorrowModelRepository extends MongoRepository<BorrowModel, UUID> {
-    List<BorrowModel> findBorrowModelsByUserId(final UUID userId);
+    List<BorrowModel> findBorrowModelsByUserIdAndBorrowStatusType(final UUID userId, final BorrowModel.BorrowStatusType status);
+    List<BorrowModel> findBorrowModelsByIsbn(final String isbn);
+    List<BorrowModel> findBorrowModelsByIsbnAndBorrowStatusType(final String isbn, final BorrowModel.BorrowStatusType status);
+    boolean existsBorrowModelByMediaIdAndBorrowStatusType(final UUID uuid, final BorrowModel.BorrowStatusType status);
 }

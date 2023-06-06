@@ -2,6 +2,7 @@ package de.fhdw.project.library.user.model;
 
 import de.fhdw.project.library.util.RandomString;
 import lombok.*;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -35,7 +36,7 @@ public class UserModel {
 
     private String password;
 
-    private boolean team;
+    private boolean team = false;
 
     private String sessionToken;
 
@@ -52,6 +53,10 @@ public class UserModel {
 
     private String zipCode;
 
+    private String phoneNumber;
+
+
+    private byte[] cover;
 
     /**
      * Generate a SessionToken as a String of 64 char's.
@@ -60,6 +65,10 @@ public class UserModel {
     public final UserModel generateSessionToken(){
         this.sessionToken = new RandomString(64, new SecureRandom(), RandomString.alphanum).nextString();
         return this;
+    }
+
+    public final String getDisplayName() {
+        return this.firstName + " " + this.lastName;
     }
 
     public final UserModelResponse toResponse(final UserModel requested){
@@ -80,15 +89,17 @@ public class UserModel {
                 .uuid(this.uuid)
                 .firstName(this.firstName)
                 .lastName(this.lastName)
-                .createdAt(isAllowed ? this.createdAt : null)
-                .email(isAllowed ? this.email : null)
-                .city(isAllowed ? this.city : null)
-                .street(isAllowed ? this.street : null)
-                .streetNumber(isAllowed ? this.streetNumber : null)
-                .zipCode(isAllowed ? this.zipCode : null);
+                .createdAt(isAllowed ? this.createdAt : -1)
+                .email(isAllowed ? this.email : "Hidden")
+                .city(isAllowed ? this.city : "Hidden")
+                .street(isAllowed ? this.street : "Hidden")
+                .streetNumber(isAllowed ? this.streetNumber : "Hidden")
+                .zipCode(isAllowed ? this.zipCode : "Hidden")
+                .phoneNumber(isAllowed ? this.phoneNumber : "Hidden")
+                .cover(isAllowed ? Base64.encodeBase64String(this.cover) : "Hidden")
+                .team(this.team);
         if(withSession)
             userModelResponseBuilder.sessionToken(this.sessionToken);
         return userModelResponseBuilder.build();
     }
-
 }

@@ -7,6 +7,7 @@ import de.fhdw.project.library.media.model.media.head.MediaHeadResponseModel;
 import de.fhdw.project.library.media.repository.MediaHeadModelRepository;
 import de.fhdw.project.library.util.LibraryUtil;
 import de.fhdw.project.library.util.response.ErrorType;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
 @Service
 public class MediaHeadModelService {
 
@@ -29,8 +31,8 @@ public class MediaHeadModelService {
     }
 
     public final MediaHeadModel getMediaHeadModelByISBNWithOutError(final String isbn){
-        final Optional<MediaHeadModel> MediaHeadModel = this.mediaHeadModelRepository.findById(isbn);
-        return MediaHeadModel.orElse(null);
+        final Optional<MediaHeadModel> mediaHeadModel = this.mediaHeadModelRepository.findById(isbn);
+        return mediaHeadModel.orElse(null);
     }
 
     public final void saveMediaHead(final MediaHeadModel MediaHeadModel){
@@ -45,13 +47,13 @@ public class MediaHeadModelService {
         return this.mediaHeadModelRepository.count();
     }
 
-    public final List<MediaHeadResponseModel> searchMedia(final String filter, int page, int size) throws LibraryException {
+    public final List<MediaHeadResponseModel> searchMedia(final MediaModelService mediaModelService, final String filter, int page, int size) throws LibraryException {
         page--;
         final List<MediaHeadResponseModel> toReturn = Lists.newArrayList();
         if(filter == null || filter.isBlank() || filter.isEmpty())
-            this.mediaHeadModelRepository.findAll(PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse()));
+            this.mediaHeadModelRepository.findAll(PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse(mediaModelService.getAmountOfBooks(entry.getIsbn()))));
         else
-            this.mediaHeadModelRepository.findMediaHeadModelsByNameStartingWithIgnoreCaseOrIsbnStartingWithIgnoreCaseOrAuthorStartingWithIgnoreCase(filter, filter, filter, PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse()));
+            this.mediaHeadModelRepository.findMediaHeadModelsByNameStartingWithIgnoreCaseOrIsbnStartingWithIgnoreCaseOrAuthorStartingWithIgnoreCase(filter, filter, filter, PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse(mediaModelService.getAmountOfBooks(entry.getIsbn()))));
         return toReturn;
     }
 

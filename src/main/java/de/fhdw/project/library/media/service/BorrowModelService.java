@@ -23,6 +23,7 @@ public class BorrowModelService {
 
     @Autowired
     private BorrowModelRepository borrowModelRepository;
+
     @Autowired
     private MediaModelService mediaModelService;
 
@@ -53,11 +54,12 @@ public class BorrowModelService {
     public final BorrowModel createBorrow(final UserModel userModel, final MediaModel mediaModel){
         final BorrowModel borrowModel = BorrowModel.builder()
                 .uuid(this.getFreeBurrowModelId())
+                .isbn(mediaModel.getIsbn())
                 .mediaId(mediaModel.getUuid())
                 .userId(userModel.getUuid())
                 .borrowStatusType(BorrowModel.BorrowStatusType.OPEN)
                 .borrowStart(Instant.now().toEpochMilli())
-                .borrowEnd(Instant.now().toEpochMilli() + TimeUnit.MILLISECONDS.toDays(3))
+                .borrowEnd(Instant.now().toEpochMilli() + TimeUnit.DAYS.toMillis(3))
                 .build();
         this.saveBorrow(borrowModel);
         return borrowModel;
@@ -71,7 +73,6 @@ public class BorrowModelService {
         if(borrowModel.getBorrowEnd() < borrowModel.getReturnedDate()){
             borrowModel.setBorrowStatusType(BorrowModel.BorrowStatusType.CLOSED_RETURNED_TOO_LATE);
         }
-
         this.saveBorrow(borrowModel);
         return borrowModel;
     }
@@ -83,9 +84,27 @@ public class BorrowModelService {
     }
 
     public final List<BorrowResponseModel> getBorrowsOfUser(final UserModel userModel){
+        return getBorrowsOfUser(userModel, BorrowModel.BorrowStatusType.OPEN);
+    }
+
+    public final List<BorrowResponseModel> getBorrowsOfUser(final UserModel userModel, BorrowModel.BorrowStatusType status){
         final List<BorrowResponseModel> toReturn = Lists.newArrayList();
-        this.borrowModelRepository.findBorrowModelsByUserId(userModel.getUuid()).forEach(entry -> toReturn.add(entry.toResponse(mediaModelService)));
+        this.borrowModelRepository.findBorrowModelsByUserIdAndBorrowStatusType(userModel.getUuid(), status).forEach(entry -> toReturn.add(entry.toResponse(mediaModelService)));
         return toReturn;
+    }
+
+    public final List<BorrowModel> getBorrowsFromIsbn(final String isbn) {
+        return this.getBorrowsFromIsbn(isbn, null);
+    }
+
+    public final List<BorrowModel> getBorrowsFromIsbn(final String isbn, final BorrowModel.BorrowStatusType borrowStatusType) {
+        if(borrowStatusType != null)
+            return this.borrowModelRepository.findBorrowModelsByIsbnAndBorrowStatusType(isbn, borrowStatusType);
+        return this.borrowModelRepository.findBorrowModelsByIsbn(isbn);
+    }
+
+    public final boolean existsBorrowFromUUID(final UUID uuid, final BorrowModel.BorrowStatusType borrowStatusType){
+        return this.borrowModelRepository.existsBorrowModelByMediaIdAndBorrowStatusType(uuid, borrowStatusType);
     }
 
     private UUID getFreeBurrowModelId(){

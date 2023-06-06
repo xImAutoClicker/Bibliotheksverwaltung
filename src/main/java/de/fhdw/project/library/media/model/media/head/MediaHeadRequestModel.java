@@ -4,13 +4,15 @@ import de.fhdw.project.library.LibraryApplication;
 import de.fhdw.project.library.exception.LibraryException;
 import de.fhdw.project.library.util.response.ErrorType;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
 public class MediaHeadRequestModel {
-    private String name;
+    @Setter
     private String isbn;
+    private String name;
     private String author;
     private String description;
     private LocalDate releaseDate;

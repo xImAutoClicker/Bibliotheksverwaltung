@@ -16,6 +16,9 @@ public class UserModelRequest {
     private String street;
     private String streetNumber;
     private String zipCode;
+    private String phoneNumber;
+    private Boolean team;
+    private String cover;
 
     public static UserModelRequest fromJson(String json){
         try{

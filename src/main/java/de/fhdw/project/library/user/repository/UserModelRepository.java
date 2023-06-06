@@ -13,4 +13,6 @@ public interface UserModelRepository extends MongoRepository<UserModel, UUID> {
     UserModel findByEmail(final String email);
     Page<UserModel> findUserEntriesByFirstNameStartingWithIgnoreCase(final String firstName, final Pageable pageable);
     boolean existsByEmail(final String email);
+
+    long countUserModelByTeamIsTrue();
 }

@@ -2,6 +2,7 @@ package de.fhdw.project.library.media.controller;
 
 import de.fhdw.project.library.exception.LibraryException;
 import de.fhdw.project.library.media.service.request.MediaModelRequestService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/media")
+@RequestMapping("api/v1/media_data")
 @CrossOrigin
+@Log4j2
 public class MediaModelGeneralController {
 
     @Autowired
@@ -37,6 +39,7 @@ public class MediaModelGeneralController {
     @PostMapping("")
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
+            log.info("CreateMedia");
             return this.mediaModelRequestService.createMedia(auth, body);
         }catch (LibraryException e){
             return e.toResponseEntity();

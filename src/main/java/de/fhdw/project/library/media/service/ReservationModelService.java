@@ -5,6 +5,7 @@ import de.fhdw.project.library.exception.LibraryException;
 import de.fhdw.project.library.media.model.media.MediaModel;
 import de.fhdw.project.library.media.model.reservation.ReservationModel;
 import de.fhdw.project.library.media.model.reservation.ReservationResponseModel;
+import de.fhdw.project.library.media.model.suggestion.SuggestionResponseModel;
 import de.fhdw.project.library.media.repository.ReservationModelRepository;
 import de.fhdw.project.library.user.model.UserModel;
 import de.fhdw.project.library.util.response.ErrorType;
@@ -23,6 +24,9 @@ public class ReservationModelService {
     private ReservationModelRepository reservationModelRepository;
     @Autowired
     private MediaModelService mediaModelService;
+
+    @Autowired
+    private BorrowModelService borrowModelService;
 
     public final ReservationModel getReservationModelByUUID(final UUID uuid) throws LibraryException {
         final Optional<ReservationModel> reservationModel = this.reservationModelRepository.findById(uuid);
@@ -43,13 +47,9 @@ public class ReservationModelService {
         return this.reservationModelRepository.count();
     }
 
-    /**
-     * Add - MediaId, UserId
-     * Update Status - ReservationId - StatusCode (nach enum liste 0 = OPEN | 1 = ACCEPTED)
-     */
-
     public final ReservationModel createReservation(final MediaModel mediaModel, final UserModel userModel, final ReservationModel.ReservationStatusType reservationStatusType) {
         final ReservationModel reservationModel = ReservationModel.builder()
+                .uuid(getFreeReservationUUID())
                 .mediaId(mediaModel.getUuid())
                 .userId(userModel.getUuid())
                 .createdAt(Instant.now().toEpochMilli())
@@ -67,13 +67,13 @@ public class ReservationModelService {
 
     public final List<ReservationResponseModel> getReservations(int page, final int size){
         final List<ReservationResponseModel> toReturn = Lists.newArrayList();
-        this.reservationModelRepository.findAll(PageRequest.of(--page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse(this.mediaModelService)));
+        this.reservationModelRepository.findAll(PageRequest.of(--page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse(this.mediaModelService, this.borrowModelService)));
         return toReturn;
     }
 
     public final List<ReservationResponseModel> getReservationsOfUser(final UserModel userModel){
         final List<ReservationResponseModel> toReturn = Lists.newArrayList();
-        this.reservationModelRepository.findReservationModelsByUserId(userModel.getUuid()).forEach(entry -> toReturn.add(entry.toResponse(this.mediaModelService)));
+        this.reservationModelRepository.findReservationModelsByUserId(userModel.getUuid()).forEach(entry -> toReturn.add(entry.toResponse(this.mediaModelService, this.borrowModelService)));
         return toReturn;
     }
 
@@ -82,5 +82,14 @@ public class ReservationModelService {
         while(this.reservationModelRepository.existsById(uuid))
             uuid = UUID.randomUUID();
         return uuid;
+    }
+
+    public List<ReservationResponseModel> searchReservation(int page, int size) {
+        page--;
+        final List<ReservationResponseModel> toReturn = Lists.newArrayList();
+
+        this.reservationModelRepository.findAll(PageRequest.of(page, size)).getContent().forEach(entry -> toReturn.add(entry.toResponse(this.mediaModelService, this.borrowModelService)));
+
+        return toReturn;
     }
 }

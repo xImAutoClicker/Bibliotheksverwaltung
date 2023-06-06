@@ -2,9 +2,11 @@ package de.fhdw.project.library.user.service;
 
 import com.google.common.collect.Lists;
 import de.fhdw.project.library.exception.LibraryException;
+import de.fhdw.project.library.media.model.media.head.MediaHeadModel;
 import de.fhdw.project.library.user.model.UserModel;
 import de.fhdw.project.library.user.model.UserModelResponse;
 import de.fhdw.project.library.user.repository.UserModelRepository;
+import de.fhdw.project.library.util.LibraryUtil;
 import de.fhdw.project.library.util.response.ErrorType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -76,7 +78,7 @@ public class UserModelService {
      * GetUser
      */
 
-    public final UserModel registerUser(final String firstName, final String lastName, final String email, final String password, final String city, final String street, final String streetNumber, final String zipCode) throws LibraryException {
+    public final UserModel registerUser(final String firstName, final String lastName, final String email, final String password, final String city, final String street, final String streetNumber, final String zipCode, final String phoneNumber) throws LibraryException {
         this.checkMail(email);
         final UserModel userEntry = UserModel.builder()
                 .uuid(this.getFreeUserEntryUUID())
@@ -88,6 +90,7 @@ public class UserModelService {
                 .street(street)
                 .streetNumber(streetNumber)
                 .zipCode(zipCode)
+                .phoneNumber(phoneNumber)
                 .createdAt(Instant.now().toEpochMilli())
                 .build()
                 .generateSessionToken();
@@ -132,4 +135,125 @@ public class UserModelService {
         return uuid;
     }
 
+
+    /**
+     * Edit User
+     */
+    public final UserModel editFirstName(final UserModel userModel, final String name){
+        return this.editFirstName(userModel, name, false);
+    }
+
+    public final UserModel editFirstName(final UserModel userModel, final String name, final boolean save){
+        userModel.setFirstName(name);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public final UserModel editLastName(final UserModel userModel, final String name){
+        return this.editLastName(userModel, name, false);
+    }
+
+    public final UserModel editLastName(final UserModel userModel, final String name, final boolean save){
+        userModel.setLastName(name);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+
+    public final UserModel editEmail(final UserModel userModel, final String value){
+        return this.editEmail(userModel, value, false);
+    }
+
+    public final UserModel editEmail(final UserModel userModel, final String value, final boolean save){
+        userModel.setEmail(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+
+    public final UserModel editPassword(final UserModel userModel, final String value){
+        return this.editPassword(userModel, value, false);
+    }
+
+    public final UserModel editPassword(final UserModel userModel, final String value, final boolean save){
+        userModel.setPassword(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public final UserModel editStreet(final UserModel userModel, final String value){
+        return this.editStreet(userModel, value, false);
+    }
+
+    public final UserModel editStreet(final UserModel userModel, final String value, final boolean save){
+        userModel.setStreet(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+
+    public final UserModel editStreetNumber(final UserModel userModel, final String value){
+        return this.editStreetNumber(userModel, value, false);
+    }
+
+    public final UserModel editStreetNumber(final UserModel userModel, final String value, final boolean save){
+        userModel.setStreetNumber(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+
+    public final UserModel editPhoneNumber(final UserModel userModel, final String value){
+        return this.editPhoneNumber(userModel, value, false);
+    }
+
+    public final UserModel editPhoneNumber(final UserModel userModel, final String value, final boolean save){
+        userModel.setPhoneNumber(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public final UserModel editZipCode(final UserModel userModel, final String value){
+        return this.editZipCode(userModel, value, false);
+    }
+
+    public final UserModel editZipCode(final UserModel userModel, final String value, final boolean save){
+        userModel.setZipCode(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public final UserModel editCity(final UserModel userModel, final String value){
+        return this.editCity(userModel, value, false);
+    }
+
+    public final UserModel editCity(final UserModel userModel, final String value, final boolean save){
+        userModel.setCity(value);
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public final UserModel editAvatar(final UserModel userModel, final String value) throws LibraryException{
+        return this.editAvatar(userModel, value, false);
+    }
+
+    public final UserModel editAvatar(final UserModel userModel, final String value, final boolean save) throws LibraryException{
+        userModel.setCover(LibraryUtil.checkAvatar(value));
+        if(save)
+            this.saveUser(userModel);
+        return userModel;
+    }
+
+    public void deleteUser(UserModel targetModel) {
+        this.userModelRepository.delete(targetModel);
+    }
 }

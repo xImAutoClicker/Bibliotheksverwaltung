@@ -21,7 +21,7 @@ public class SuggestionModelGeneralController {
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
             return this.suggestionModelRequestService.createSuggestion(auth, body);
-        }catch (LibraryException e){
+        } catch (LibraryException e){
             return e.toResponseEntity();
         }
     }
@@ -62,4 +62,21 @@ public class SuggestionModelGeneralController {
         }
     }
 
+    @GetMapping("/search")
+    public final ResponseEntity<String> onSearch(@RequestHeader final String auth, @RequestParam(required = false) final String filter, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
+        try{
+            return this.suggestionModelRequestService.searchSuggestion(auth, filter, page, size);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
+
+    @DeleteMapping("/{uuid}")
+    public final ResponseEntity<String> onDelete(@RequestHeader final String auth, @PathVariable final UUID uuid){
+        try{
+            return this.suggestionModelRequestService.deleteSuggestion(auth, uuid);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/media_head/")
+@RequestMapping("api/v1/media_head")
 @CrossOrigin
 public class MediaHeadModelGeneralController {
 
@@ -22,7 +22,6 @@ public class MediaHeadModelGeneralController {
             return e.toResponseEntity();
         }
     }
-
     @GetMapping("/search")
     public final ResponseEntity<String> onSearch(@RequestHeader final String auth, @RequestParam(required = false) final String filter, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
         try{
@@ -58,6 +57,4 @@ public class MediaHeadModelGeneralController {
             return e.toResponseEntity();
         }
     }
-
-
 }

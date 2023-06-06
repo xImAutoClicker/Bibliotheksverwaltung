@@ -28,27 +28,52 @@ public class BorrowModel {
     @Indexed
     private UUID mediaId;
 
+    @Indexed
+    private String isbn;
+
     /**
      * ID of user who have borrowed the Media
      */
     @Indexed
     private UUID userId;
+
     private BorrowStatusType borrowStatusType;
+
     private long borrowStart;
 
     private long borrowEnd;
 
     private long returnedDate;
 
-
     public final BorrowResponseModel toResponse(MediaModelService mediaModelService) {
+        double penaltyFees = this.getOverdueDays() * 5; // 5€ per Day
+
         return BorrowResponseModel.builder()
                 .uuid(this.uuid)
                 .media(mediaModelService.getMediaModelByUUIDWithOutError(this.mediaId).toResponse(mediaModelService.getMediaHeadModelService()))
-                .borrowStatusType(borrowStatusType)
+                .userId(this.userId)
+                .borrowStatusType(borrowStatusType.ordinal())
                 .borrowStart(this.borrowStart)
                 .borrowEnd(this.borrowEnd)
+                .returnedDate(this.returnedDate)
+                .penaltyFees(penaltyFees)
                 .build();
+    }
+
+    public long getOverdueDays() {
+        long currentDate = System.currentTimeMillis();
+
+        if (currentDate > this.borrowEnd && this.returnedDate == 0) {
+            long overdueMillis = currentDate - this.borrowEnd;
+            long overdueDays = overdueMillis / (24 * 60 * 60 * 1000);
+            return overdueDays;
+        } else if (this.returnedDate > this.borrowEnd) {
+            long overdueMillis = this.returnedDate - this.borrowEnd;
+            long overdueDays = overdueMillis / (24 * 60 * 60 * 1000);
+            return overdueDays;
+        } else {
+            return 0;
+        }
     }
 
     public enum BorrowStatusType {

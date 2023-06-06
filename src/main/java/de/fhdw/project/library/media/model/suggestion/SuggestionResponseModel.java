@@ -9,9 +9,14 @@ import java.util.UUID;
 @Builder
 public class SuggestionResponseModel extends AbstractResponse {
     private UUID uuid;
-    private UUID userId;
+    private UUID creatorId;
     private String nameOfBook;
     private String isbn;
-    private SuggestionModel.SuggestionStatusType suggestionStatusType;
+    private String suggestionStatusType;
+    private String cover;
     private long createdAt;
+
+    public SuggestionModel.SuggestionStatusType getSuggestionStatusType() {
+        return SuggestionModel.SuggestionStatusType.values()[Integer.parseInt(this.suggestionStatusType)];
+    }
 }

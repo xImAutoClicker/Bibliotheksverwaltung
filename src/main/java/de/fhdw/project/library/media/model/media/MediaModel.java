@@ -26,12 +26,13 @@ public class MediaModel {
      */
     @Id
     private UUID uuid;
+
     @Indexed
     private String isbn;
 
     public final MediaResponseModel toResponse(final MediaHeadModelService mediaHeadModelService){
         return MediaResponseModel.builder()
-                .uuid(this.uuid)
+                .mediaId(this.uuid)
                 .mediaHead(mediaHeadModelService.getMediaHeadModelByISBNWithOutError(this.isbn).toResponse())
                 .build();
     }

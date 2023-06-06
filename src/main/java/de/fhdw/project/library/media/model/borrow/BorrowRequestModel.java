@@ -9,8 +9,12 @@ import java.util.UUID;
 
 @Getter
 public class BorrowRequestModel {
-    private UUID mediaId;
-    private BorrowModel.BorrowStatusType borrowStatusType;
+    private String isbn;
+    private int borrowStatusType;
+
+    public BorrowModel.BorrowStatusType getBorrowStatusType() {
+        return BorrowModel.BorrowStatusType.values()[this.borrowStatusType];
+    }
 
     public static BorrowRequestModel fromJson(String json){
         try{

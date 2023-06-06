@@ -17,7 +17,6 @@ public class BorrowModelGeneralController {
     @Autowired
     private BorrowModelRequestService borrowModelRequestService;
 
-
     @PostMapping("")
     public final ResponseEntity<String> onCreate(@RequestHeader final String auth, @RequestBody final String body){
         try{
@@ -49,6 +48,15 @@ public class BorrowModelGeneralController {
     public final ResponseEntity<String> onGetBorrowsOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
             return this.borrowModelRequestService.getBorrowOfUser(auth, uuid);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
+
+    @GetMapping("/user/punishes/{uuid}")
+    public final ResponseEntity<String> onGetOverdayBorrowsOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
+        try{
+            return this.borrowModelRequestService.getBorrowOverdaysOfUser(auth, uuid);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }

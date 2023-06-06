@@ -1,9 +1,11 @@
 package de.fhdw.project.library.media.model.suggestion;
 
 import lombok.*;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -21,6 +23,8 @@ public class SuggestionModel {
 
     private String isbn;
 
+    private byte[] cover;
+
     private UUID userId;
 
     private long createdAt;
@@ -32,9 +36,10 @@ public class SuggestionModel {
                 .uuid(this.uuid)
                 .nameOfBook(this.nameOfBook)
                 .isbn(this.isbn)
-                .userId(this.userId)
+                .creatorId(this.userId)
                 .createdAt(this.createdAt)
-                .suggestionStatusType(this.statusType)
+                .suggestionStatusType(String.valueOf(this.statusType.ordinal()))
+                .cover(Base64.encodeBase64String(cover))
                 .build();
     }
 

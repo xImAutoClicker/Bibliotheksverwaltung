@@ -52,6 +52,15 @@ public class ReservationModelGeneralController {
         }
     }
 
+    @DeleteMapping("/{uuid}")
+    public final ResponseEntity<String> onDelete(@RequestHeader final String auth, @PathVariable final UUID uuid){
+        try{
+            return this.reservationModelRequestService.deleteReservation(auth, uuid);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
+
     @GetMapping("/user/{uuid}")
     public final ResponseEntity<String> onGetReservationOfUser(@RequestHeader final String auth, @PathVariable final UUID uuid){
         try{
@@ -70,4 +79,12 @@ public class ReservationModelGeneralController {
         }
     }
 
+    @GetMapping("/search")
+    public final ResponseEntity<String> onSearch(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
+        try{
+            return this.reservationModelRequestService.searchReservation(auth, page, size);
+        }catch (LibraryException e){
+            return e.toResponseEntity();
+        }
+    }
 }
