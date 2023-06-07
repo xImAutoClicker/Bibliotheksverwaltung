@@ -5,6 +5,7 @@ import de.fhdw.project.library.media.model.media.MediaModel;
 import de.fhdw.project.library.media.model.media.MediaRequestModel;
 import de.fhdw.project.library.media.model.media.MediaSearchResponseModel;
 import de.fhdw.project.library.media.model.media.head.MediaHeadModel;
+import de.fhdw.project.library.media.service.BorrowModelService;
 import de.fhdw.project.library.media.service.MediaHeadModelService;
 import de.fhdw.project.library.media.service.MediaModelService;
 import de.fhdw.project.library.user.model.UserModel;
@@ -31,6 +32,9 @@ public class MediaModelRequestService {
     @Autowired
     private MediaHeadModelService mediaHeadModelService;
 
+    @Autowired
+    private BorrowModelService borrowModelService;
+
     public final ResponseEntity<String> getMedia(final String auth, final UUID uuid) throws LibraryException {
         this.userModelService.getUserModelByHeader(auth);
         final MediaModel mediaModel = this.mediaModelService.getMediaModelByUUID(uuid);
@@ -40,6 +44,7 @@ public class MediaModelRequestService {
 
     public final ResponseEntity<String> searchMedia(final String auth, final String filter, int page, final int size) throws LibraryException {
         this.userModelService.getUserModelByHeader(auth);
+
         if (page - 1 < 0 || size <= 0)
             throw new LibraryException(ErrorType.BAD_REQUEST);
 
@@ -71,7 +76,7 @@ public class MediaModelRequestService {
 
         final MediaModel mediaModel = this.mediaModelService.getMediaModelByUUID(uuid);
 
-        this.mediaModelService.deleteMedia(mediaModel);
+        this.mediaModelService.deleteMedia(mediaModel, this.borrowModelService);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

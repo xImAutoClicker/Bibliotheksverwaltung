@@ -25,7 +25,6 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@Log4j2
 public class MediaHeadModelRequestService {
 
     @Autowired
@@ -101,7 +100,12 @@ public class MediaHeadModelRequestService {
             throw new LibraryException(ErrorType.DOES_NOT_HAVE_PERMISSION);
 
         final MediaHeadModel mediaHeadModel = this.mediaHeadModelService.getMediaHeadModelByISBN(isbn);
+
+        if(!this.mediaModelService.getMediaModelsByISBN(mediaHeadModel.getIsbn()).isEmpty())
+            throw new LibraryException(ErrorType.MEDIA_FOUND);
+
         this.mediaHeadModelService.deleteMediaHead(mediaHeadModel);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

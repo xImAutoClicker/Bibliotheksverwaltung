@@ -44,6 +44,9 @@ public class BorrowModelRequestService {
         if(borrowRequestModel.getIsbn() == null || borrowRequestModel.getBorrowStatusType() == null)
             throw new LibraryException(ErrorType.BAD_REQUEST);
 
+        if(!userModel.canBorrow())
+            throw new LibraryException(ErrorType.ADDRESS_NOT_FOUND);
+
         MediaModel freeMediaModel = this.mediaModelService.getFreeMedia(borrowRequestModel.getIsbn(), this.borrowModelService);
 
         if(freeMediaModel == null) {
@@ -98,17 +101,19 @@ public class BorrowModelRequestService {
             throw new LibraryException(ErrorType.DOES_NOT_HAVE_PERMISSION);
 
         return BorrowSearchResponseModel.builder().borrows(this.borrowModelService.getBorrowsOfUser(targetModel, BorrowModel.BorrowStatusType.CLOSED_RETURNED_TOO_LATE)).build().toResponseEntity(HttpStatus.OK);
-
     }
 
-    public final ResponseEntity<String> getBorrows(final String auth, final int page, final int size) throws LibraryException {
+    public final ResponseEntity<String> getBorrows(final String auth, final int page, final int size, final BorrowModel.BorrowStatusType status) throws LibraryException {
         final UserModel requestedModel = this.userModelService.getUserModelByHeader(auth);
         if(!requestedModel.isTeam())
             throw new LibraryException(ErrorType.DOES_NOT_HAVE_PERMISSION);
         if (page - 1 < 0 || size <= 0)
             throw new LibraryException(ErrorType.BAD_REQUEST);
 
-        return BorrowSearchResponseModel.builder().borrows(this.borrowModelService.getBorrows(page, size)).count(this.borrowModelService.countAllBorrows()).build().toResponseEntity(HttpStatus.OK);
+        if(status == null)
+            return BorrowSearchResponseModel.builder().borrows(this.borrowModelService.getBorrows(page, size)).count(this.borrowModelService.countAllBorrows()).build().toResponseEntity(HttpStatus.OK);
+        else
+            return BorrowSearchResponseModel.builder().borrows(this.borrowModelService.getBorrows(status, page, size)).count(this.borrowModelService.countAllBorrows()).build().toResponseEntity(HttpStatus.OK);
 
     }
 }

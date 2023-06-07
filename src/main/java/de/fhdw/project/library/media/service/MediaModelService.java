@@ -43,7 +43,9 @@ public class MediaModelService {
         this.mediaModelRepository.save(mediaModel);
     }
 
-    public final void deleteMedia(final MediaModel mediaModel) {
+    public final void deleteMedia(final MediaModel mediaModel, final BorrowModelService borrowModelService) throws LibraryException{
+        if(borrowModelService.existsBorrowFromUUID(mediaModel.getUuid(), BorrowModel.BorrowStatusType.OPEN))
+            throw new LibraryException(ErrorType.MEDIA_IS_IN_USE);
         this.mediaModelRepository.delete(mediaModel);
     }
 

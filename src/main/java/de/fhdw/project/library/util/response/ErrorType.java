@@ -26,7 +26,10 @@ public enum ErrorType {
     MEDIA_HEAD_NOT_FOUND(541, "Der Buch-Kopf wurde nicht gefunden!", HttpStatus.BAD_REQUEST),
     ISBN_ALREADY_IN_USE(542, "Die ISBN wurde bereits verwendet. Ist das Buch schon vorhanden?", HttpStatus.BAD_REQUEST),
     MEDIA_FOUND_BUT_NO_ITEMS_CREATED(543, "Das Buch wurde zwar gefunden, es wurde jedoch kein Bestand gefunden!", HttpStatus.BAD_REQUEST),
-    RESERVATION_WAS_CREATED(544, "Das Buch ist aktuell nicht verfügbar. Wir haben das Buch für Sie reserviert.", HttpStatus.BAD_REQUEST);
+    RESERVATION_WAS_CREATED(544, "Das Buch ist aktuell nicht verfügbar. Wir haben das Buch für Sie reserviert.", HttpStatus.BAD_REQUEST),
+    ADDRESS_NOT_FOUND(545, "Um Bücher ausleihen zu können, bitten wir Sie, Ihre Adressdaten in Ihrem Profil einzutragen.", HttpStatus.BAD_REQUEST),
+    MEDIA_IS_IN_USE(546, "Das Buch wird derzeit noch benutzt!", HttpStatus.BAD_REQUEST),
+    MEDIA_FOUND(547, "Es wurden noch Bücher im Bestand gefunden, lösche sie zu erst!", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String status;

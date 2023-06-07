@@ -1,6 +1,7 @@
 package de.fhdw.project.library.media.controller;
 
 import de.fhdw.project.library.exception.LibraryException;
+import de.fhdw.project.library.media.model.borrow.BorrowModel;
 import de.fhdw.project.library.media.service.request.BorrowModelRequestService;
 import de.fhdw.project.library.media.service.request.SuggestionModelRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +63,10 @@ public class BorrowModelGeneralController {
         }
     }
 
-    @GetMapping("")
-    public final ResponseEntity<String> onGet(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size){
+    @GetMapping("/search")
+    public final ResponseEntity<String> onGet(@RequestHeader final String auth, @RequestParam(defaultValue = "1") final int page, @RequestParam(defaultValue = "10") final int size, @RequestParam(defaultValue = "-1") final int statusType){
         try{
-            return this.borrowModelRequestService.getBorrows(auth, page, size);
+            return this.borrowModelRequestService.getBorrows(auth, page, size, statusType == -1 ? null : BorrowModel.BorrowStatusType.values()[statusType]);
         }catch (LibraryException e){
             return e.toResponseEntity();
         }

@@ -1,5 +1,7 @@
 package de.fhdw.project.library.media.model.media;
 
+import de.fhdw.project.library.media.model.borrow.BorrowModel;
+import de.fhdw.project.library.media.service.BorrowModelService;
 import de.fhdw.project.library.media.service.MediaHeadModelService;
 import lombok.*;
 import org.springframework.data.annotation.Id;

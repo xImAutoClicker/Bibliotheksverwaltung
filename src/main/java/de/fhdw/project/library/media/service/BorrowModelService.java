@@ -38,7 +38,7 @@ public class BorrowModelService {
         this.borrowModelRepository.save(borrowModel);
     }
 
-    public final void deleteReservation(final BorrowModel borrowModel) {
+    public final void deleteBorrow(final BorrowModel borrowModel) {
         this.borrowModelRepository.delete(borrowModel);
     }
 
@@ -83,6 +83,12 @@ public class BorrowModelService {
         return toReturn;
     }
 
+    public final List<BorrowResponseModel> getBorrows(BorrowModel.BorrowStatusType status, int page, final int size){
+        final List<BorrowResponseModel> toReturn = Lists.newArrayList();
+        this.borrowModelRepository.findBorrowModelsByBorrowStatusType(PageRequest.of(--page, size), status).getContent().forEach(entry -> toReturn.add(entry.toResponse(mediaModelService)));
+        return toReturn;
+    }
+
     public final List<BorrowResponseModel> getBorrowsOfUser(final UserModel userModel){
         return getBorrowsOfUser(userModel, BorrowModel.BorrowStatusType.OPEN);
     }
@@ -101,6 +107,10 @@ public class BorrowModelService {
         if(borrowStatusType != null)
             return this.borrowModelRepository.findBorrowModelsByIsbnAndBorrowStatusType(isbn, borrowStatusType);
         return this.borrowModelRepository.findBorrowModelsByIsbn(isbn);
+    }
+
+    public final BorrowModel getBorrowFromMediaId(final UUID mediaId, final BorrowModel.BorrowStatusType borrowStatusType) {
+        return this.borrowModelRepository.getBorrowModelByMediaIdAndBorrowStatusType(mediaId, borrowStatusType);
     }
 
     public final boolean existsBorrowFromUUID(final UUID uuid, final BorrowModel.BorrowStatusType borrowStatusType){

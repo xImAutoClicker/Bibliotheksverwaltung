@@ -78,10 +78,14 @@ public class UserModelService {
      * GetUser
      */
 
-    public final UserModel registerUser(final String firstName, final String lastName, final String email, final String password, final String city, final String street, final String streetNumber, final String zipCode, final String phoneNumber) throws LibraryException {
+    public final UserModel registerUser(final String firstName, final String lastName, final String email, String password, final String city, final String street, final String streetNumber, final String zipCode, final String phoneNumber) throws LibraryException {
         this.checkMail(email);
+
+        UUID uuid = this.getFreeUserEntryUUID();
+        password = (String.valueOf(uuid.hashCode()) + String.valueOf(password.hashCode()));
+
         final UserModel userEntry = UserModel.builder()
-                .uuid(this.getFreeUserEntryUUID())
+                .uuid(uuid)
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
@@ -100,10 +104,12 @@ public class UserModelService {
         return userEntry;
     }
 
-    public final UserModel loginUser(final String loginName, final String password) throws LibraryException {
+    public final UserModel loginUser(final String loginName, String password) throws LibraryException {
         final UserModel userEntry = this.getUserModelByEmail(loginName);
         if(userEntry == null)
             throw new LibraryException(ErrorType.WRONG_PASSWORD_USERNAME);
+
+        password = (String.valueOf(userEntry.getUuid().hashCode()) + String.valueOf(password.hashCode()));
 
         if(!userEntry.getPassword().equals(password))
             throw new LibraryException(ErrorType.WRONG_PASSWORD_USERNAME);

@@ -36,6 +36,7 @@ public class UserModel {
 
     private String password;
 
+    @Builder.Default
     private boolean team = false;
 
     private String sessionToken;
@@ -65,6 +66,10 @@ public class UserModel {
     public final UserModel generateSessionToken(){
         this.sessionToken = new RandomString(64, new SecureRandom(), RandomString.alphanum).nextString();
         return this;
+    }
+
+    public final boolean canBorrow() {
+        return this.city != null && this.street != null && this.streetNumber != null && this.zipCode != null && this.phoneNumber != null;
     }
 
     public final String getDisplayName() {
